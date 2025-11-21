@@ -1,0 +1,77 @@
+/* Basic container */
+.container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: #fff;
+}
+
+/* Form inputs */
+#form-pencarian label {
+    display: block;
+    margin-top: 8px;
+    font-weight: 600;
+}
+#form-pencarian input,
+#form-pencarian select,
+#form-pencarian button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0 12px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+#form-pencarian button {
+    background-color: #2f8f4b;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+#form-pencarian button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Table */
+#tabel-harga {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    table-layout: fixed;
+}
+#tabel-harga th,
+#tabel-harga td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    word-wrap: break-word;
+}
+#tabel-harga th {
+    background-color: #f7f7f7;
+    font-weight: 700;
+}
+
+/* Status / hint */
+.hint {
+    font-size: 13px;
+    color: #555;
+    margin: 0 0 12px 0;
+}
+.status {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container { margin: 16px; padding: 12px; }
+    #form-pencarian input, #form-pencarian select, #form-pencarian button { font-size: 15px; padding: 8px; }
+    #tabel-harga th, #tabel-harga td { padding: 8px; font-size: 14px; }
+}
