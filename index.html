@@ -1,67 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CEK HARGA BARANG PASAR DESA</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-header { background: #2b8a3e; color: white; padding: 20px; text-align: center; font-size: 24px; }
-.container { padding: 20px; }
-.card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.card h3 { margin: 0 0 10px; }
-.search-box { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
-th { background: #e8e8e8; }
-.whatsapp { display: inline-block; padding: 10px 15px; background: #25d366; color: white; border-radius: 5px; text-decoration: none; margin-top: 10px; }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cari Harga Komoditas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>CEK HARGA BARANG PASAR DESA</header>
+    <main class="container" id="main-content">
+        <h1>Cari Harga Komoditas</h1>
 
-<div class="container">
-<input type="text" id="search" class="search-box" placeholder="Cari harga barang... (cabai, beras, ayam)">
-<div id="results"></div>
-</div>
+        <form id="form-pencarian" aria-describedby="hint">
+            <label for="komoditas">Nama Komoditas</label>
+            <input type="text" id="komoditas" name="komoditas" placeholder="Contoh: Beras, Cabai Merah" autocomplete="off" required>
 
-<script>
-const data = [
-{ nama: "CABAI MERAH", harga: "Rp 38.000 / kg" },
-{ nama: "CABAI RAWIT", harga: "Rp 52.000 / kg" },
-{ nama: "BERAS MEDIUM", harga: "Rp 12.000 / kg" },
-{ nama: "BERAS PREMIUM", harga: "Rp 15.000 / kg" },
-{ nama: "GULA PASIR", harga: "Rp 17.000 / kg" },
-{ nama: "MINYAK KITA", harga: "Rp 13.000 / liter" },
-{ nama: "TELUR AYAM", harga: "Rp 28.000 / kg" },
-{ nama: "AYAM POTONG", harga: "Rp 38.000 / kg" },
-{ nama: "IKAN KEMBUNG", harga: "Rp 35.000 / kg" }
-];
+            <label for="lokasi">Lokasi Pasar / Desa</label>
+            <select id="lokasi" name="lokasi" aria-label="Lokasi">
+                <option value="desa-a">Desa A</option>
+                <option value="desa-b">Desa B</option>
+            </select>
 
-const searchInput = document.getElementById("search");
-const resultsContainer = document.getElementById("results");
+            <button type="submit" id="btn-submit">Cek Harga</button>
+            <p id="hint" class="hint">Masukkan nama komoditas minimal 2 karakter untuk mencari.</p>
+        </form>
 
-function render(items) {
-resultsContainer.innerHTML = "";
-items.forEach(item => {
-const card = document.createElement("div");
-card.className = "card";
-card.innerHTML = `
-<h3>${item.nama}</h3>
-<p>Harga Pasar Saat Ini: <strong>${item.harga}</strong></p>
-<a class="whatsapp" href="https://wa.me/6285230000000?text=Halo%20saya%20ingin%20cek%20harga%20${item.nama}" target="_blank">Tanya Penjual via WA</a>
-`;
-resultsContainer.appendChild(card);
-});
-}
+        <hr>
 
-searchInput.addEventListener("keyup", () => {
-const keyword = searchInput.value.toLowerCase();
-const filtered = data.filter(d => d.nama.toLowerCase().includes(keyword));
-render(filtered);
-});
+        <h2>Hasil Harga Terbaru</h2>
+        <div id="results-status" aria-live="polite" class="status"></div>
 
-render(data);
-</script>
+        <table id="tabel-harga" aria-describedby="results-status">
+            <thead>
+                <tr>
+                    <th>Komoditas</th>
+                    <th>Harga Rata-rata</th>
+                    <th>Tanggal Update</th>
+                    <th>Sumber Data</th>
+                </tr>
+            </thead>
+            <tbody id="tabel-body">
+                <!-- Baris akan di-render oleh JS -->
+            </tbody>
+        </table>
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
