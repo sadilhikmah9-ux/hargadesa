@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HargaDesa — Pasar Desa</title>
+  <meta name="description" content="Katalog harga barang pasar desa — update harian, pesan via WhatsApp" />
+  <style>
+    :root{--bg:#fff8f0;--accent:#b45f00;--muted:#6b6b6b}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;background:var(--bg);color:#1b1b1b}
+    header{background:linear-gradient(90deg,#fef3e7,#fff7f0);border-bottom:4px solid #f1d0a8;padding:18px}
+    .container{max-width:980px;margin:0 auto;padding:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand img{width:64px;height:64px;border-radius:8px;object-fit:cover;border:2px solid #ffdcb3}
+    .brand h1{margin:0;font-size:20px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+    nav{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    nav a{background:#fff;border:1px solid #f0d7b0;padding:8px 12px;border-radius:8px;text-decoration:none;color:#5b3a00;font-weight:600}
+
+    .hero{display:grid;grid-template-columns:1fr 260px;gap:12px;margin-top:18px}
+    .card{background:white;border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+
+    .search{display:flex;gap:8px}
+    .search input{flex:1;padding:10px;border-radius:8px;border:1px solid #f0d7b0}
+    .search button{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:700}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:12px}
+    .prod{background:linear-gradient(180deg,#fff,#fff7eb);padding:10px;border-radius:10px;border:1px solid #f3dbc0}
+    .prod img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .prod h3{margin:8px 0 4px;font-size:16px}
+    .prod p{margin:0;color:var(--muted);font-size:14px}
+    .price{font-weight:800;color:#8a3e00;margin-top:8px}
+    .btn{display:inline-block;margin-top:8px;padding:8px 10px;background:#ffb058;border-radius:8px;text-decoration:none;color:#4a2300;font-weight:700}
+
+    aside .card{position:sticky;top:18px}
+    footer{text-align:center;padding:18px;color:var(--muted);font-size:13px;margin-top:18px}
+
+    /* admin modal */
+    .admin-btn{position:fixed;right:18px;bottom:18px;background:#6b3b00;color:white;padding:12px;border-radius:999px;border:0;font-weight:700}
+    .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(12,12,12,0.4)}
+    .modal .box{width:92%;max-width:520px;background:white;padding:12px;border-radius:12px}
+    form label{display:block;margin-top:8px;font-size:13px}
+    form input, form textarea, form select{width:100%;padding:8px;border-radius:8px;border:1px solid #eee;margin-top:6px}
+    form button{margin-top:10px;padding:10px;border:0;border-radius:8px;background:var(--accent);color:white;font-weight:700}
+
+    @media (max-width:780px){.hero{grid-template-columns:1fr}.brand img{width:56px;height:56px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <!-- using user's uploaded image file as logo -->
+        <img src="/mnt/data/1000068348.jpg" alt="logo pasar desa">
+        <div>
+          <h1>HARGA DESA</h1>
+          <p>Harga pasar tradisional dan penawaran barang lokal — pesan lewat WhatsApp</p>
+        </div>
+      </div>
+      <nav>
+        <a href="#home">Beranda</a>
+        <a href="#katalog">Katalog</a>
+        <a href="#artikel">Artikel</a>
+        <a href="#tentang">Tentang</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="card">
+          <div class="search">
+            <input id="q" placeholder="Cari: cabai, beras, ayam...">
+            <button id="searchBtn">Cari</button>
+          </div>
+          <div id="katalog" class="grid" style="margin-top:12px"></div>
+        </div>
+
+        <div id="artikel" class="card" style="margin-top:12px">
+          <h3>Artikel Terbaru</h3>
+          <ul id="artikelList">
+            <li>Cara cek kualitas cabai sebelum beli</li>
+            <li>5 produk lokal yang cepat laku di pasar</li>
+            <li>Cara memasang harga jual agar tetap laku</li>
+          </ul>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h3>Info Singkat</h3>
+          <p>Nomor pemesanan: <strong id="waNumber">+62 852-3000-0000</strong></p>
+          <p>Update harga: <span id="lastUpdate">-</span></p>
+          <a class="btn" id="orderNow" href="#">Pesan Sekarang (WA)</a>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Tambah Harga (Admin)</h3>
+          <p>Tekan tombol <strong>Admin</strong> di pojok kanan bawah untuk menambah dan edit harga.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="tentang" style="margin-top:12px">
+      <div class="card">
+        <h3>Tentang HARGA DESA</h3>
+        <p>HARGA DESA dibuat untuk membantu warga desa memantau harga bahan pokok dan memasarkan produk lokal. Cocok untuk penjual, pembeli, dan perantara.</p>
+      </div>
+    </section>
+
+    <section id="kontak" style="margin-top:12px">
+      <div class="card">
+        <h3>Kontak</h3>
+        <p>Hubungi via WhatsApp: <span id="waContact">+62 852-3000-0000</span></p>
+        <p>Atau kirim email ke: <em>hargadesa@example.com</em></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="year"></span> HARGA DESA — Pasar Desa</p>
+    </div>
+  </footer>
+
+  <button class="admin-btn" id="openAdmin">Admin</button>
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <h3>Panel Admin — Tambah / Edit Produk</h3>
+      <form id="form">
+        <label>Nama Produk</label>
+        <input id="pname" required>
+        <label>Deskripsi</label>
+        <input id="pdesc">
+        <label>Harga (contoh: Rp 15.000 / kg)</label>
+        <input id="pprice" required>
+        <label>URL Gambar (opsional)</label>
+        <input id="pimg" placeholder="biarkan kosong untuk foto default">
+        <label>Kategori</label>
+        <select id="pcat">
+          <option value="sayur">Sayur & Buah</option>
+          <option value="hewan">Ayam & Telur</option>
+          <option value="kering">Kering & Kerajinan</option>
+          <option value="rongsok">Rongsok</option>
+        </select>
+        <button type="submit">Simpan</button>
+        <button type="button" id="closeAdmin" style="background:#999;margin-left:8px">Tutup</button>
+      </form>
+      <div style="margin-top:12px">
+        <h4>Produk yang ada</h4>
+        <div id="prodList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // small localStorage DB
+    const KEY = 'hargadesa_products_v1';
+    const defaultProducts = [
+      {id:1,name:'Cabai Merah',desc:'kg',price:'Rp 38.000 / kg',img:'',cat:'sayur'},
+      {id:2,name:'Beras Medium',desc:'kg',price:'Rp 12.000 / kg',img:'',cat:'kering'},
+      {id:3,name:'Ayam Potong',desc:'ekor',price:'Rp 38.000 / kg',img:'',cat:'hewan'},
+    ];
+
+    function load(){
+      const raw = localStorage.getItem(KEY);
+      if(!raw){ localStorage.setItem(KEY, JSON.stringify(defaultProducts)); return defaultProducts; }
+      try{return JSON.parse(raw);}catch(e){localStorage.setItem(KEY, JSON.stringify(defaultProducts));return defaultProducts}
+    }
+
+    function save(items){localStorage.setItem(KEY, JSON.stringify(items));}
+
+    let products = load();
+
+    const katalog = document.getElementById('katalog');
+    const q = document.getElementById('q');
+    const searchBtn = document.getElementById('searchBtn');
+    const waNumber = document.getElementById('waNumber');
+    const orderNow = document.getElementById('orderNow');
+    const lastUpdate = document.getElementById('lastUpdate');
+
+    function renderCatalog(list){
+      katalog.innerHTML = '';
+      list.forEach(p=>{
+        const el = document.createElement('div'); el.className='prod';
+        el.innerHTML = `\n          <img src="${p.img || '/mnt/data/1000068348.jpg'}" alt="${p.name}">\n          <h3>${p.name}</h3>\n          <p>${p.desc}</p>\n          <div class="price">${p.price}</div>\n          <a class="btn" href="https://wa.me/6285230000000?text=Halo%20saya%20mau%20pesan%20${encodeURIComponent(p.name)}%20(${encodeURIComponent(p.price)})">Pesan via WA</a>\n        `;
+        katalog.appendChild(el);
+      })
+    }
+
+    renderCatalog(products);
+    lastUpdate.textContent = new Date().toLocaleString();
+
+    searchBtn.addEventListener('click', ()=>{ const keyword=q.value.toLowerCase(); const filtered=products.filter(p=>p.name.toLowerCase().includes(keyword)||p.desc.toLowerCase().includes(keyword)); renderCatalog(filtered); })
+    q.addEventListener('keyup', (e)=>{ if(e.key==='Enter'){ searchBtn.click(); } })
+
+    // admin modal logic
+    const modal = document.getElementById('modal');
+    const openAdmin = document.getElementById('openAdmin');
+    const closeAdmin = document.getElementById('closeAdmin');
+    const form = document.getElementById('form');
+    const prodList = document.getElementById('prodList');
+
+    function refreshProdList(){
+      prodList.innerHTML = '';
+      products.forEach(p=>{
+        const d = document.createElement('div'); d.style.padding='6px 0'; d.innerHTML = `<strong>${p.name}</strong> — ${p.price} <button data-id="${p.id}" style="margin-left:8px">Edit</button> <button data-iddel="${p.id}" style="margin-left:6px;background:#d33;color:white">Hapus</button>`;
+        prodList.appendChild(d);
+      })
+    }
+
+    openAdmin.addEventListener('click', ()=>{ modal.style.display='flex'; refreshProdList(); })
+    closeAdmin.addEventListener('click', ()=>{ modal.style.display='none'; })
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const id = Date.now();
+      const p = {id:id,name:document.getElementById('pname').value,desc:document.getElementById('pdesc').value,price:document.getElementById('pprice').value,img:document.getElementById('pimg').value,cat:document.getElementById('pcat').value}
+      products.push(p); save(products); renderCatalog(products); refreshProdList(); form.reset(); lastUpdate.textContent = new Date().toLocaleString(); alert('Produk tersimpan (tersimpan di browser kamu). Agar bisa diakses di HP lain, kita nanti hubungkan ke database sederhana.')
+    })
+
+    prodList.addEventListener('click', (e)=>{
+      if(e.target.dataset.id){
+        const id = Number(e.target.dataset.id);
+        const p = products.find(x=>x.id===id);
+        if(!p) return;
+        document.getElementById('pname').value = p.name;
+        document.getElementById('pdesc').value = p.desc;
+        document.getElementById('pprice').value = p.price;
+        document.getElementById('pimg').value = p.img;
+        document.getElementById('pcat').value = p.cat;
+        // remove old and add on save
+        products = products.filter(x=>x.id!==id); save(products);
+      }
+      if(e.target.dataset.iddel){
+        const idd = Number(e.target.dataset.iddel);
+        products = products.filter(x=>x.id!==idd); save(products); renderCatalog(products); refreshProdList();
+      }
+    })
+
+    // make WA link update
+    function setWANumber(n){ waNumber.textContent = n; orderNow.href = `https://wa.me/${n.replace(/\D/g,'')}`; document.getElementById('waContact').textContent = n; }
+    setWANumber('+62 852-3000-0000');
+
+    // expose some helper for next steps
+    window.hargadesa = {getProducts:()=>products, setProducts:(list)=>{products=list; save(products); renderCatalog(products); refreshProdList();}}
+  </script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
